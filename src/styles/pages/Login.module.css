@@ -1,0 +1,60 @@
+.container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: var(--blue) url('/simbolo.svg') no-repeat left;
+    background-size: 90vh;
+}
+
+.container div h1 {
+    margin-top: 7rem;
+    color: var(--white);
+}
+
+.container div p {
+    display: flex;
+    align-items: center;
+    line-height: 1.4;
+    max-width: 80%;
+    margin-top: 3rem;
+    color: var(--gray-line)
+}
+
+.container div p img {
+    margin-right: 1rem;
+}
+
+.container div div {
+    display: flex;
+    margin-top: 1.5rem;
+}
+
+.container div div input {
+    background: linear-gradient(90deg, #4953B8 0%, rgba(73, 83, 184, 0.2) 100%);
+    border-radius: 5px 0px 0px 5px;
+    padding: 1.25rem;
+    flex: 1;
+    border: 0;
+    color: var(--white);
+}
+
+.container div div input::placeholder {
+    color: var(--gray-line);
+}
+
+.container div div button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1.5rem;
+
+    border: 0;
+    border-radius: 0px 5px 5px 0px;
+
+    background: var(--green);
+}
+
+.container div div button:disabled {
+    background: var(--blue-dark);
+}

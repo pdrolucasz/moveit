@@ -1,65 +1,88 @@
-import Head from 'next/head'
+import { useState, ChangeEvent, useContext } from 'react'
 import { GetServerSideProps } from 'next'
+import Head from 'next/head'
+import Router from 'next/router'
+import Cookies from 'js-cookie'
 
-import { ChallengesProvider } from '../contexts/ChallengesContext'
-import {
-  ExperienceBar,
-  Profile,
-  CompletedChallenges,
-  Countdown,
-  ChallengeBox
-} from '../components'
+import styles from '../styles/pages/Login.module.css'
+import { AuthContext } from '../contexts/AuthContext'
 
-import { CountdownProvider } from '../contexts/CountdownContext'
+export default function Login() {
+    const { login } = useContext(AuthContext)
+    const [userName, setUserName] = useState('')
 
-import styles from '../styles/pages/Home.module.css'
+    function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+        setUserName(event.target.value);
+    }
 
-interface HomeProps {
-  level: number
-  currentExperience: number
-  challengesCompleted: number
-}
+    async function handleLogin() {
+        if(!userName) {
+            return
+        }
 
-export default function Home(props: HomeProps) {
-  return (
-    <ChallengesProvider
-      level={props.level}
-      currentExperience={props.currentExperience}
-      challengesCompleted={props.challengesCompleted}
-    >
-      <div className={styles.container}>
-        <Head>
-          <title>Início | move.it</title>
-        </Head>
+        const user = {
+            userName,
+            name: 'Pedro',
+            avatarUrl: `https://github.com/${userName}.png`
+        }
+        Cookies.set('user', user)
 
-        <ExperienceBar />
+        login(user)
 
-        <CountdownProvider>
-          <section>
+        Router.push('/home')
+    }
+
+    return(
+        <div className={styles.container}>
+            <Head>
+                <title>Login | move.it</title>
+            </Head>
+            <div />
             <div>
-              <Profile />
-              <CompletedChallenges />
-              <Countdown />
-            </div>
+                <img src="/logo.svg" alt="Logo"/>
 
-            <div>
-              <ChallengeBox />
+                <h1>Bem-vindo</h1>
+
+                <p>
+                    <img src="/github.svg" alt="Githun logo"/>
+
+                    Faça login com seu Github para começar
+                </p>
+                
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Digite seu username"
+                        onChange={handleInputChange}
+                    />
+                    <button
+                        type="button"
+                        onClick={handleLogin}
+                        disabled={userName.length === 0}
+                    >
+                        <img src="/icons/arrow-right.svg"/>
+                    </button>
+                </div>
             </div>
-          </section>
-        </CountdownProvider>
-      </div>
-    </ChallengesProvider>
-  )
+        </div>
+    )
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { level, currentExperience, challengesCompleted } = ctx.req.cookies
+    const { user } = ctx.req.cookies
 
-  return {
-    props: {
-      level: Number(level ?? 1),
-      currentExperience: Number(currentExperience ?? 0),
-      challengesCompleted: Number(challengesCompleted ?? 0)
+    if(user) {
+            return {
+                redirect: {
+                destination: '/home',
+                permanent: false,
+            },
+        }
     }
-  }
+
+    return {
+        props: {
+            user: user ?? "",
+        }
+    }
 }
