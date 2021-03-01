@@ -23,15 +23,10 @@ export function AuthProvider({ children, ...rest }: AuthProviderProps) {
     const [user, setUser] = useState<AuthState>(() => {
         if(rest) {
             return {
-                userName: rest.user.userName,
-                avatarUrl: rest.user.avatarUrl,
-                name: rest.user.name
+                userName: rest.user?.userName,
+                avatarUrl: rest.user?.avatarUrl,
+                name: rest.user?.name
             }
-        }
-        const user = Cookies.get('user')
-
-        if(user) {
-            return JSON.parse(user)
         }
 
         return {} as AuthState
